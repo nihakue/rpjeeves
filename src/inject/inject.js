@@ -1,5 +1,6 @@
 rollExps = {
 	'd20': new RegExp("(\\d+ )?(\\w{2,})(?:<\\/b>)? ([+\\-]\\d+)", 'g'),
+	'multiAttack': new RegExp("/([+\\-]\\d+)", 'g'),
 	'attack': new RegExp("((\\d+)d(\\d+)\\s?([+\\-]\\d+))", 'g')
 	};
 
@@ -23,6 +24,8 @@ chrome.extension.sendMessage({}, function(response) {
 
 		//We might find a better way to do this, but the lack of structure forces us to rely on the text itself.
 		bodyHTML = bodyHTML.replace(rollExps.d20, d20replacer);	
+		
+		bodyHTML = bodyHTML.replace(rollExps.multiAttack, multiAttackReplacer);
 
 		//replace damage rolls with roll buttons
 		bodyHTML = bodyHTML.replace(rollExps.attack, replacer);
@@ -47,6 +50,10 @@ chrome.extension.sendMessage({}, function(response) {
 
 function d20replacer(match, p1, p2, p3){
 	return createRollButton({'rollName': (p1 || "") + " " + p2 + " " + p3, 'modifier': p3, 'die': 20, 'numDice': p1 || 1})[0].outerHTML;
+}
+
+function multiAttackReplacer(match, p1){
+	return createRollButton({'rollName': "/" + p1, 'modifier': p1, 'die': 20, 'numDice': 1})[0].outerHTML;
 }
 
 function replacer(match, p1, p2, p3, p4){
@@ -79,8 +86,24 @@ function roll(numDice, die, modifier){
 	modifierInt = parseInt(modifier);
 	dieInt = parseInt(die);
 	numDiceInt = parseInt(numDice);
-	var rawRoll = Math.floor((Math.random() * dieInt) + 1) * numDiceInt;
-	return numDice + "d" + die + "(" + String(rawRoll) + ")" + modifier + " (" + (rawRoll + modifierInt) + ")";
+	var rawRoll = 0;
+	var rollString = "";
+	for (i = 0; i < numDiceInt; i++)
+	{
+		var dieRoll = Math.floor((Math.random() * dieInt) + 1);
+		rawRoll += dieRoll;
+		if (numDiceInt < 10) //popover doesn't display long strings well
+		{
+			rollString += String(dieRoll);
+			if (i != numDiceInt - 1)
+			rollString += "+";
+		}
+		else
+		{
+			rollString = rawRoll;
+		}
+	}
+	return numDice + "d" + die + "(" + rollString + ")" + modifier + " = " + (rawRoll + modifierInt) + "";
 }
 
 function rollFactory(numDice, die, modifier){
