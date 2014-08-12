@@ -11,24 +11,19 @@ chrome.extension.sendMessage({}, function(response) {
 		var bodyHTML = document.body.innerHTML;
 
 		//Replace basic stats with roll buttons
-		var re = new RegExp("(\\d+ )?(\\w+)(<\\/b>)? ([+\\-]\\d+)", 'g');
-		var matches = re.exec(bodyHTML);
-		console.log(matches);
+		var re = new RegExp("(\\d+ )?(\\w+)(?:<\\/b>)? ([+\\-]\\d+)", 'g');
+		var match,
+			rollName,
+			modifier,
+			numDice;
 
 		//We might find a better way to do this, but the lack of structure forces us to rely on the text itself.
-		bodyHTML = bodyHTML.replace(re, createRollButton({'rollName': "$2 $4", 'modifier': "$4", 'die': 20, 'numDice': 1})[0].outerHTML);	
-
-		//replace attack stats with roll buttons
-		// var re = new RegExp("((\\d+)?\\s?(\\w+) ([+\\-]\\d+) \\((\\d+d\\d+[+\\-]\\d+)(\\/\\d+(&ndash;|\\-)\\d+)?\\))", 'g');
-		// console.log(re);
-
-		// bodyHTML = bodyHTML.replace(re, createRollButton({'rollName': "$1", 'modifier': "$4", 'die': 20, 'numDice': 1}));
+		bodyHTML = bodyHTML.replace(re, d20replacer);	
 
 		//replace damage rolls with roll buttons
 		var re = new RegExp("((\\d+)d(\\d+)\\s?([+\\-]\\d+))", 'g');
 		var matches = re.exec(bodyHTML);
-		console.log(matches);
-		bodyHTML = bodyHTML.replace(re, createRollButton({'rollName': "$1", 'modifier': "$4", 'die': "$3", 'numDice': "$2"})[0].outerHTML);
+		bodyHTML = bodyHTML.replace(re, replacer);
 
 		document.body.innerHTML = bodyHTML;
 
@@ -40,6 +35,14 @@ chrome.extension.sendMessage({}, function(response) {
 	}
 	}, 10);
 });
+
+function d20replacer(match, p1, p2, p3){
+	return createRollButton({'rollName': (p1 || "") + " " + p2 + p3, 'modifier': p3, 'die': 20, 'numDice': p1 || 1})[0].outerHTML;
+}
+
+function replacer(match, p1, p2, p3, p4){
+	return createRollButton({'rollName': match, 'modifier': p4, 'die': p3, 'numDice': p2 || 1})[0].outerHTML;
+}
 
 function rollString(s){
 	var re = new RegExp("(\\d+)d(\\d+)\\s?([+\\-]\\d+)");
@@ -55,7 +58,6 @@ function rollString(s){
 }
 
 function roll(numDice, die, modifier){
-	console.log(arguments);
 	modifierInt = parseInt(modifier);
 	dieInt = parseInt(die);
 	numDiceInt = parseInt(numDice);
@@ -74,6 +76,7 @@ function rollFactory(numDice, die, modifier){
 }
 
 function createRollButton(options){
+	console.log(options);
 	var rollName = typeof(options.rollName) === "undefined" ? "Basic" : options.rollName;
 	var modifier = typeof(options.modifier) === "undefined" ? "+0" : options.modifier;
 	var die = typeof(options.die) === "undefined" ? 20 : options.die;
