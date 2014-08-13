@@ -33,15 +33,16 @@ chrome.extension.sendMessage({}, function(response) {
 		document.body.innerHTML = bodyHTML;
 
 		//Initialize Popover for every popover element
-		$('[data-toggle="popover"').popover();
+		$('[data-toggle="popover"').popover({'html': true});
 		// $('.roll').on('click', function(e){$(this).attr("data-content", roll(1, 20, $(this).attr("modifier")))});
 
-		$('.roll').on('click', function(e) {
+		$('.roll').on('mousedown', function(e) {
 			var numDice = $(this).attr('numDice');
 			var die = $(this).attr('die');
 			var modifier = $(this).attr('modifier');
-			$(this).attr('data-content', roll(numDice, die, modifier));
+			$(this).attr('data-content', $(this).attr('re') === "d20"? multiRoll(numDice, die, modifier): roll(numDice, die, modifier));
 		});
+		$('.rollResult').cl
 		// ----------------------------------------------------------
 
 	}
@@ -53,11 +54,11 @@ function d20replacer(match, p1, p2, p3){
 }
 
 function multiAttackReplacer(match, p1){
-	return createRollButton({'rollName': "/" + p1, 'modifier': p1, 'die': 20, 'numDice': 1})[0].outerHTML;
+	return createRollButton({'re': 'attack', 'rollName': "/" + p1, 'modifier': p1, 'die': 20, 'numDice': 1})[0].outerHTML;
 }
 
 function replacer(match, p1, p2, p3, p4){
-	return createRollButton({'buttonType': 'btn-danger', 'rollName': match, 'modifier': p4, 'die': p3, 'numDice': p2 || 1})[0].outerHTML;
+	return createRollButton({'re': 'attack', 'buttonType': 'btn-danger', 'rollName': match, 'modifier': p4, 'die': p3, 'numDice': p2 || 1})[0].outerHTML;
 }
 
 //broken at present
@@ -82,6 +83,21 @@ function replacer(match, p1, p2, p3, p4){
 // 	return roll(numDice, die, modifier);
 // }
 
+function multiRoll(numDice, die, modifier){
+	var modifierInt = parseInt(modifier);
+	var dieInt = parseInt(die);
+	var numDiceInt = parseInt(numDice);
+	var result = '<ul class="list-group">';
+
+	for (var i = 0; i < numDiceInt; i++) {
+		result += '<li class="list-group-item">';
+		result += roll(1, dieInt, modifier);
+		result += "</li>";
+	}
+	result += '</ul>';
+	return result;
+}
+
 function roll(numDice, die, modifier){
 	modifierInt = parseInt(modifier);
 	dieInt = parseInt(die);
@@ -103,7 +119,7 @@ function roll(numDice, die, modifier){
 			rollString = rawRoll;
 		}
 	}
-	return numDice + "d" + die + "(" + rollString + ")" + modifier + " = " + (rawRoll + modifierInt) + "";
+	return numDice + "d" + die + "(" + rollString + ")" + modifier + " = " + "<span style='font-size: 15px' class='label label-primary'>" + (rawRoll + modifierInt) + "</span>";
 }
 
 function rollFactory(numDice, die, modifier){
@@ -120,6 +136,7 @@ function createRollButton(options){
 	var die = typeof(options.die) === "undefined" ? 20 : options.die;
 	var numDice = typeof(options.numDice) === "undefined" ? 1 : options.numDice;
 	var buttonType = typeof(options.buttonType) === "undefined" ? "btn-success" : options.buttonType;
+	var re = typeof(options.re) === "undefined" ? 'd20' : options.re;
 
 	
 
@@ -130,11 +147,11 @@ function createRollButton(options){
 		'data-toggle': "popover",
 		'title': rollName + " roll",
 		'text': rollName,
-		'data-content': roll(numDice, die, modifier),
 		'rollName': rollName,
 		'modifier': modifier,
 		'die': die,
-		'numDice': numDice
+		'numDice': numDice,
+		're': re
 		});
 // .on('click', function(e) {
 // 			$(this).attr("data-content", rollFactory(numDice, die, modifier));
