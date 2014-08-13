@@ -36,8 +36,6 @@
   "content_scripts": [
     {
       "matches": [
-        "http://paizo.com/pathfinderRPG/prd/*",
-        "http://www.d20pfsrd.com/*",
         "*://*/*bestiary*",
         "*://*/*monsters*",
         "*://*/*monster*"
@@ -50,8 +48,6 @@
     },
     {
       "matches": [
-        "http://paizo.com/pathfinderRPG/prd/*",
-        "http://www.d20pfsrd.com/*",
         "*://*/*bestiary*",
         "*://*/*monsters*",
         "*://*/*monster*"
