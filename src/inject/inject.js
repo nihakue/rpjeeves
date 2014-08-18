@@ -1,7 +1,5 @@
 rollExps = {
-	'd20': new RegExp("(\\d+ )?(\\w{2,})(?:<\\/\\w{1}>)? ([+\\-]\\d+)", 'g'),
-	'multiAttack': new RegExp("/([+\\-]\\d+)", 'g'),
-	'slashAttack': new RegExp(),
+	'd20': new RegExp("(\\d+ )?(\\w{2,})(?:<\\/[^a]{1}>)? ((?:\\/?[+\\-]\\d+)+)", 'g'),
 	'attack': new RegExp("((\\d+)d(\\d+)\\s?([+\\-]\\d+))", 'g'),
 	};
 
@@ -25,8 +23,6 @@ chrome.extension.sendMessage({}, function(response) {
 
 		//We might find a better way to do this, but the lack of structure forces us to rely on the text itself.
 		bodyHTML = bodyHTML.replace(rollExps.d20, d20replacer);	
-		
-		bodyHTML = bodyHTML.replace(rollExps.multiAttack, multiAttackReplacer);
 
 		//replace damage rolls with roll buttons
 		bodyHTML = bodyHTML.replace(rollExps.attack, replacer);
@@ -52,10 +48,6 @@ chrome.extension.sendMessage({}, function(response) {
 
 function d20replacer(match, p1, p2, p3){
 	return createRollButton({'rollName': (p1 || "") + " " + p2 + " " + p3, 'modifier': p3, 'die': 20, 'numDice': p1 || 1})[0].outerHTML;
-}
-
-function multiAttackReplacer(match, p1){
-	return createRollButton({'re': 'attack', 'rollName': "/" + p1, 'modifier': p1, 'die': 20, 'numDice': 1})[0].outerHTML;
 }
 
 function replacer(match, p1, p2, p3, p4){
@@ -85,12 +77,19 @@ function replacer(match, p1, p2, p3, p4){
 // }
 
 function multiRoll(numDice, die, modifier){
-	var modifierInt = parseInt(modifier);
+	var modifiers = parseAttacks(modifier);
+	if (modifiers.length > 1){
+		numDice = modifiers.length;
+	}
+
 	var dieInt = parseInt(die);
 	var numDiceInt = parseInt(numDice);
 	var result = '<ul class="list-group">';
 
+	var modifier;
+
 	for (var i = 0; i < numDiceInt; i++) {
+		modifier = i <= modifiers.length - 1 ? modifiers[i] : modifiers[modifiers.length - 1];
 		result += '<li class="list-group-item">';
 		result += roll(1, dieInt, modifier);
 		result += "</li>";
@@ -123,6 +122,11 @@ function roll(numDice, die, modifier){
 	return numDice + "d" + die + "(" + rollString + ")" + modifier + " = " + "<span style='font-size: 15px' class='label label-primary'>" + (rawRoll + modifierInt) + "</span>";
 }
 
+//attackStrings will look like this: "+36 or +36/+12/+9 etc..."
+function parseAttacks(attackString){
+	return attackString.split("/");
+}
+
 function rollFactory(numDice, die, modifier){
 	// console.log('Die outer: ' + die);
 	return function (){
@@ -139,7 +143,6 @@ function createRollButton(options){
 	var buttonType = typeof(options.buttonType) === "undefined" ? "btn-success" : options.buttonType;
 	var re = typeof(options.re) === "undefined" ? 'd20' : options.re;
 
-	
 
 	var rollButton = $('<button></button>', {
 		'type': 'button',
