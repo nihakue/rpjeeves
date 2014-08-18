@@ -12,9 +12,6 @@ If you do choose to use rpjeeves in this unpacked, unreleased state, we would be
 ##Contributing
 We're a very small team just doing this for fun, and as such don't have much of an official process for contributing. If you'd like to help out, just fork the repository and make some changes/bug fixes. Send us a pull request and we'd be delighted to work with you to incorporate your work.
 
-###Changes
-If you make changes to the code, you need to reload the extension in the chrome extension tab before the changes will be visible.
-
 ##Screenshots
 ![d20pfsrd without](http://i.imgur.com/X6vqjRI.png)
 ![d20pfsrd with rpjeeves](http://i.imgur.com/IU1BT4P.png)
