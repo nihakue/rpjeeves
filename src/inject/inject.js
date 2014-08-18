@@ -1,7 +1,8 @@
 rollExps = {
-	'd20': new RegExp("(\\d+ )?(\\w{2,})(?:<\\/b>)? ([+\\-]\\d+)", 'g'),
+	'd20': new RegExp("(\\d+ )?(\\w{2,})(?:<\\/\\w{1}>)? ([+\\-]\\d+)", 'g'),
 	'multiAttack': new RegExp("/([+\\-]\\d+)", 'g'),
-	'attack': new RegExp("((\\d+)d(\\d+)\\s?([+\\-]\\d+))", 'g')
+	'slashAttack': new RegExp(),
+	'attack': new RegExp("((\\d+)d(\\d+)\\s?([+\\-]\\d+))", 'g'),
 	};
 
 chrome.extension.sendMessage({}, function(response) {
