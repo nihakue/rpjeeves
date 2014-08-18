@@ -1,6 +1,6 @@
 rollExps = {
-	'd20': new RegExp("(\\d+ )?(\\w{2,})(?:<\\/[^a]{1}>)? ((?:\\/?[+\\-]\\d+)+)", 'g'),
-	'attack': new RegExp("((\\d+)d(\\d+)\\s?([+\\-]\\d+))", 'g'),
+	'd20': new RegExp("(\\d+ )?([\\w\\(\\)]{2,})(<\\/\\w{1}>)? ((?:\\/?[+\\-]\\d+)+)", 'g'),
+	'attack': new RegExp("((\\d+)d(\\d+)\\s?([+\\-]\\d+)?)", 'g'),
 	};
 
 chrome.extension.sendMessage({}, function(response) {
@@ -46,8 +46,11 @@ chrome.extension.sendMessage({}, function(response) {
 	}, 10);
 });
 
-function d20replacer(match, p1, p2, p3){
-	return createRollButton({'rollName': (p1 || "") + " " + p2 + " " + p3, 'modifier': p3, 'die': 20, 'numDice': p1 || 1})[0].outerHTML;
+function d20replacer(match, p1, p2, p3, p4){
+	if (p3 === "</a>"){
+		return match.replace(p4, "") + createRollButton({'rollName': (p1 || "") + " " + p2 + " " + p4, 'rollText': p4, 'modifier': p4, 'die': 20, 'numDice': p1 || 1})[0].outerHTML;
+	}
+	return createRollButton({'rollName': (p1 || "") + " " + p2 + " " + p4, 'modifier': p4, 'die': 20, 'numDice': p1 || 1})[0].outerHTML;
 }
 
 function replacer(match, p1, p2, p3, p4){
@@ -137,6 +140,7 @@ function rollFactory(numDice, die, modifier){
 
 function createRollButton(options){
 	var rollName = typeof(options.rollName) === "undefined" ? "Basic" : options.rollName;
+	var rollText = typeof(options.rollText) === "undefined" ? rollName : options.rollText;
 	var modifier = typeof(options.modifier) === "undefined" ? "+0" : options.modifier;
 	var die = typeof(options.die) === "undefined" ? 20 : options.die;
 	var numDice = typeof(options.numDice) === "undefined" ? 1 : options.numDice;
@@ -150,7 +154,7 @@ function createRollButton(options){
 		'data-trigger': "click",
 		'data-toggle': "popover",
 		'title': rollName + " roll",
-		'text': rollName,
+		'text': rollText,
 		'rollName': rollName,
 		'modifier': modifier,
 		'die': die,
