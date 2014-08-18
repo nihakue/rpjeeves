@@ -1,6 +1,6 @@
 rollExps = {
 	'd20': new RegExp("(\\d+ )?([\\w\\(\\)]{2,})(<\\/\\w{1}>)? ((?:\\/?[+\\-]\\d+)+)", 'g'),
-	'attack': new RegExp("((\\d+)d(\\d+)\\s?([+\\-]\\d+)?)", 'g'),
+	'attack': new RegExp("(\\b(\\d+)d(\\d+)\\s?([+\\-]\\d+)?\\b)", 'g'),
 	};
 
 chrome.extension.sendMessage({}, function(response) {
