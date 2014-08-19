@@ -16,7 +16,7 @@
 
 rollExps = {
 	'd20': new RegExp("(\\d+ )?([\\w\\(\\)]{2,})(<\\/\\w{1}>)? ((?:\\/?[+\\-]\\d+)+)", 'g'),
-	'attack': new RegExp("(\\b(\\d+)d(\\d+)\\s?([+\\-]\\d+)?\\b)", 'g'),
+	'attack': new RegExp("(\\b(\\d+)d(\\d+)\\s?((?:[+\\-]|–|&ndash;)\\d+)?\\b)", 'g'),
 	};
 
 chrome.extension.sendMessage({}, function(response) {
@@ -70,6 +70,13 @@ function d20replacer(match, p1, p2, p3, p4){
 }
 
 function replacer(match, p1, p2, p3, p4){
+	if (p4 && p4.indexOf("+") < 0){
+		if (p4.indexOf("–") >= 0){
+			p4 = p4.replace("–", "-");
+		} else if (p4.indexOf("&ndash;") >= 0){
+			p4 = p4.replace("&ndash;", "-");
+		}
+	}
 	return createRollButton({'re': 'attack', 'buttonType': 'btn-danger', 'rollName': match, 'modifier': p4, 'die': p3, 'numDice': p2 || 1})[0].outerHTML;
 }
 
