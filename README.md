@@ -4,6 +4,7 @@ rpjeeves
 A browser extension that we're working on to help GMs spend more time telling a compelling story, and less time being a computer. We play a lot of pathfinder, but we're sick of (and bad at) all of the bookkeeping needed to run a smooth session, so we're making the tool that we've always wanted.
 
 ##Installation
+rpjeeves isn't quite ready for release, but if you're anxious to try it out, you can get your hands a little dirty and install the unpacked, unfinished version.
 First, you need to clone or fork the repo. Then, read [https://developer.chrome.com/extensions/getstarted#unpacked](these) instructions on installing unpacked chrome extensions.
 
 ##Feedback
