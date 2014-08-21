@@ -14,6 +14,8 @@
 //     with this program; if not, write to the Free Software Foundation, Inc.,
 //     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+jq = $;
+
 rollExps = {
 	'd20': new RegExp("(\\d+ )?([\\w\\(\\)]{2,})(<\\/\\w{1}>)? ((?:\\/?[+\\-]\\d+)+)", 'g'),
 	'attack': new RegExp("(\\b(\\d+)d(\\d+)\\s?((?:[+\\-]|–|&ndash;)\\d+)?\\b)", 'g'),
@@ -27,35 +29,35 @@ chrome.extension.sendMessage({}, function(response) {
 		// ----------------------------------------------------------
 		// This part of the script triggers when page is done loading
 		console.log("Hello. This message was sent from scripts/inject.js");
-		var bodyHTML = document.body.innerHTML;
+		var bodyHTML = jq('body').html();
 
 		//Replace basic stats with roll buttons
 
-		// $('body').contents().filter(function() {
+		// jq('body').contents().filter(function() {
 		// 	return this.nodeType === 3;
 		// }).each(function() {
-		// 	$(this).replaceWith($(this).text().replace(re, d20replacer));
+		// 	jq(this).replaceWith(jq(this).text().replace(re, d20replacer));
 		// });
 
-		//We might find a better way to do this, but the lack of structure forces us to rely on the text itself.
+		// We might find a better way to do this, but the lack of structure forces us to rely on the text itself.
 		bodyHTML = bodyHTML.replace(rollExps.d20, d20replacer);	
 
 		//replace damage rolls with roll buttons
 		bodyHTML = bodyHTML.replace(rollExps.attack, replacer);
 
-		document.body.innerHTML = bodyHTML;
+		jq('body').html(bodyHTML);
+		console.log(jq.fn.jquery);
 
 		//Initialize Popover for every popover element
-		$('[data-toggle="popover"').popover({'html': true});
-		// $('.roll').on('click', function(e){$(this).attr("data-content", roll(1, 20, $(this).attr("modifier")))});
+		jq('[data-toggle="popover"]').popover({'html': true});
 
-		$('.roll').on('mousedown', function(e) {
-			var numDice = $(this).attr('numDice');
-			var die = $(this).attr('die');
-			var modifier = $(this).attr('modifier');
-			$(this).attr('data-content', $(this).attr('re') === "d20"? multiRoll(numDice, die, modifier): roll(numDice, die, modifier));
+		jq('.roll').on('mousedown', function(e) {
+			var numDice = jq(this).attr('numDice');
+			var die = jq(this).attr('die');
+			var modifier = jq(this).attr('modifier');
+			jq(this).attr('data-content', jq(this).attr('re') === "d20"? multiRoll(numDice, die, modifier): roll(numDice, die, modifier));
 		});
-		$('.rollResult').cl
+		jq('.rollResult').cl
 		// ----------------------------------------------------------
 
 	}
@@ -171,7 +173,7 @@ function createRollButton(options){
 	var re = typeof(options.re) === "undefined" ? 'd20' : options.re;
 
 
-	var rollButton = $('<button></button>', {
+	var rollButton = jq('<button></button>', {
 		'type': 'button',
 		'class': "btn " + buttonType + " btn-xs popover-dismiss roll",
 		'data-trigger': "click",
@@ -185,7 +187,7 @@ function createRollButton(options){
 		're': re
 		});
 // .on('click', function(e) {
-// 			$(this).attr("data-content", rollFactory(numDice, die, modifier));
+// 			jq(this).attr("data-content", rollFactory(numDice, die, modifier));
 
 	return rollButton;
 }
