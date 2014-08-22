@@ -45,8 +45,7 @@ chrome.extension.sendMessage({}, function(response) {
 		//replace damage rolls with roll buttons
 		bodyHTML = bodyHTML.replace(rollExps.attack, replacer);
 
-		jq('body').html(bodyHTML);
-		console.log(jq.fn.jquery);
+		document.body.innerHTML = bodyHTML;
 
 		//Initialize Popover for every popover element
 		jq('[data-toggle="popover"]').popover({'html': true});
