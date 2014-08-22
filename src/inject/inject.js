@@ -28,16 +28,10 @@ chrome.extension.sendMessage({}, function(response) {
 
 		// ----------------------------------------------------------
 		// This part of the script triggers when page is done loading
-		console.log("Hello. This message was sent from scripts/inject.js");
+		// console.log("Hello. This message was sent from scripts/inject.js");
 		var bodyHTML = jq('body').html();
 
 		//Replace basic stats with roll buttons
-
-		// jq('body').contents().filter(function() {
-		// 	return this.nodeType === 3;
-		// }).each(function() {
-		// 	jq(this).replaceWith(jq(this).text().replace(re, d20replacer));
-		// });
 
 		// We might find a better way to do this, but the lack of structure forces us to rely on the text itself.
 		bodyHTML = bodyHTML.replace(rollExps.d20, d20replacer);	
@@ -80,28 +74,6 @@ function replacer(match, p1, p2, p3, p4){
 	}
 	return createRollButton({'re': 'attack', 'buttonType': 'btn-danger', 'rollName': match, 'modifier': p4, 'die': p3, 'numDice': p2 || 1})[0].outerHTML;
 }
-
-//broken at present
-// function rollString(s){
-// 	var matches,
-// 		numDice,
-// 		die,
-// 		modifier;
-
-// 	if (matches = rollExps.attack.exec(s)){
-// 		numDice = matches[1];
-// 		die = matches[2];
-// 		modifier = matches[3];
-// 	} else if (matches = rollExps.d20.exec(s)){
-// 		numDice = matches[1];
-// 		die = 20;
-// 		modifier = matches[3];
-// 	} else{
-// 		console.log("rollString broke");
-// 		return null;
-// 	}
-// 	return roll(numDice, die, modifier);
-// }
 
 function multiRoll(numDice, die, modifier){
 	var modifiers = parseAttacks(modifier);
@@ -185,8 +157,6 @@ function createRollButton(options){
 		'numDice': numDice,
 		're': re
 		});
-// .on('click', function(e) {
-// 			jq(this).attr("data-content", rollFactory(numDice, die, modifier));
 
 	return rollButton;
 }
