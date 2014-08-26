@@ -102,7 +102,7 @@ function roll(numDice, die, modifier){
 	dieInt = parseInt(die);
 	numDiceInt = parseInt(numDice);
 	var maxRoll = numDiceInt * dieInt + modifierInt;
-    var rawRoll = 0;
+	var rawRoll = 0;
 	var rollString = "";
 	for (i = 0; i < numDiceInt; i++)
 	{
