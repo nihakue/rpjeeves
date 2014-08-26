@@ -5,7 +5,7 @@ A browser extension that we're working on to help GMs spend more time telling a 
 
 ##Installation
 rpjeeves isn't quite ready for release, but if you're anxious to try it out, you can get your hands a little dirty and install the unpacked, unfinished version.
-First, you need to clone or fork the repo. Then, read [https://developer.chrome.com/extensions/getstarted#unpacked](these) instructions on installing unpacked chrome extensions.
+First, you need to clone or fork the repo. Then, read [these](https://developer.chrome.com/extensions/getstarted#unpacked) instructions on installing unpacked chrome extensions.
 
 ##Feedback
 If you do choose to use rpjeeves in this unpacked, unreleased state, we would be tickled to get your feedback. Please use the github issue tracker to report your bugs, and be as descriptive as possible. We are especially interested to hear about SRDs that are not compatible with rpjeeves.

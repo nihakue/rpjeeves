@@ -101,6 +101,7 @@ function roll(numDice, die, modifier){
 	modifierInt = parseInt(modifier);
 	dieInt = parseInt(die);
 	numDiceInt = parseInt(numDice);
+	var maxRoll = numDiceInt * dieInt + modifierInt;
 	var rawRoll = 0;
 	var rollString = "";
 	for (i = 0; i < numDiceInt; i++)
@@ -118,7 +119,7 @@ function roll(numDice, die, modifier){
 			rollString = rawRoll;
 		}
 	}
-	return numDice + "d" + die + "(" + rollString + ")" + modifier + " = " + "<span style='font-size: 15px' class='label label-primary'>" + (rawRoll + modifierInt) + "</span>";
+	return numDice + "d" + die + "(" + rollString + ")" + modifier + " = " + "<span style='font-size: 15px' class='label label-primary'>" + (rawRoll + modifierInt) + "</span> / " + maxRoll;
 }
 
 //attackStrings will look like this: "+36 or +36/+12/+9 etc..."
