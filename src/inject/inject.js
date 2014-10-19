@@ -139,11 +139,10 @@ function createRollButton(options){
 	var buttonType = typeof(options.buttonType) === "undefined" ? "btn-success" : options.buttonType;
 	var re = typeof(options.re) === "undefined" ? 'd20' : options.re;
 
-
 	var rollButton = $('<button></button>', {
 		'type': 'button',
 		'class': "btn " + buttonType + " btn-xs popover-dismiss roll",
-		'data-trigger': "click",
+		'data-trigger': "focus",
 		'data-toggle': "popover",
 		'title': rollName + " roll",
 		'text': rollText,
