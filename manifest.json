@@ -1,6 +1,6 @@
 {
   "name": "rpjeeves",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 2,
   "description": "A browser extension to help GMs spend more time telling a compelling story, and less time being a computer.",
   "homepage_url": "http://github.com/nihakue/rpjeeves",
@@ -17,6 +17,7 @@
     "persistent": true
   },
   "options_page": "src/options_custom/index.html",
+<<<<<<< HEAD
   "browser_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "browser action demo",
@@ -29,6 +30,10 @@
     "cookies",
     "history",
     "tabs"
+=======
+  "permissions": [
+
+>>>>>>> master
   ],
   "omnibox": {
     "keyword": "jeeves"
