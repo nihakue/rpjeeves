@@ -14,7 +14,6 @@
 //     with this program; if not, write to the Free Software Foundation, Inc.,
 //     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-jq = $;
 
 rollExps = {
 	'd20': new RegExp("(\\d+ )?([\\w\\(\\)]{2,})(<\\/\\w{1}>)? ((?:\\/?[+\\-]\\d+)+)", 'g'),
@@ -29,33 +28,30 @@ chrome.extension.sendMessage({}, function(response) {
 		// ----------------------------------------------------------
 		// This part of the script triggers when page is done loading
 		// console.log("Hello. This message was sent from scripts/inject.js");
-		var bodyHTML = jq('body').html();
-
 		//Replace basic stats with roll buttons
 
 		// We might find a better way to do this, but the lack of structure forces us to rely on the text itself.
-		bodyHTML = bodyHTML.replace(rollExps.d20, d20replacer);	
-
-		//replace damage rolls with roll buttons
-		bodyHTML = bodyHTML.replace(rollExps.attack, replacer);
-
-		document.body.innerHTML = bodyHTML;
+		$('p').html(replaceAll);
 
 		//Initialize Popover for every popover element
-		jq('[data-toggle="popover"]').popover({'html': true});
+		$('[data-toggle="popover"]').popover({'html': true});
 
-		jq('.roll').on('mousedown', function(e) {
-			var numDice = jq(this).attr('numDice');
-			var die = jq(this).attr('die');
-			var modifier = jq(this).attr('modifier');
-			jq(this).attr('data-content', jq(this).attr('re') === "d20"? multiRoll(numDice, die, modifier): roll(numDice, die, modifier));
+		$('.roll').on('mousedown', function(e) {
+			var numDice = $(this).attr('numDice');
+			var die = $(this).attr('die');
+			var modifier = $(this).attr('modifier');
+			$(this).attr('data-content', $(this).attr('re') === "d20"? multiRoll(numDice, die, modifier): roll(numDice, die, modifier));
 		});
-		jq('.rollResult').cl
+		$('.rollResult').cl
 		// ----------------------------------------------------------
 
 	}
 	}, 10);
 });
+
+function replaceAll(i, old_html){
+	return old_html.replace(rollExps.d20, d20replacer).replace(rollExps.attack, replacer)
+}
 
 function d20replacer(match, p1, p2, p3, p4){
 	if (p3 === "</a>"){
@@ -144,7 +140,7 @@ function createRollButton(options){
 	var re = typeof(options.re) === "undefined" ? 'd20' : options.re;
 
 
-	var rollButton = jq('<button></button>', {
+	var rollButton = $('<button></button>', {
 		'type': 'button',
 		'class': "btn " + buttonType + " btn-xs popover-dismiss roll",
 		'data-trigger': "click",
