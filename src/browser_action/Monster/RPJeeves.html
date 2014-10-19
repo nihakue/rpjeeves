@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+    <script src="RPJeeves.js"></script>
+</head>
+<body ng-app="RPJeeves">
+<div ng-controller="RPJeevesController">
+    <div>
+        <ul style="list-style: none">
+            <li><h4>{{monster.name}}</h4></li>
+
+            <li>init {{monster.init}}</li>
+            <li><b>hp</b> {{monster.hd}} ({{monster.hp}})</li>
+            <li><b>ac</b> {{monster.ac}}</li>
+            <li><b>saves</b> {{monster.saves}}</li>
+            <li><b>attacks</b>
+                {{monster.melee}}
+                {{monster.ranged}}
+            </li>
+            <li><b>cmb</b> cmb {{monster.cmb}}</li>
+            <li><b>cmd</b> {{monster.cmd}}</li>
+            <li><b>xp</b> {{monster.xp}}</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
